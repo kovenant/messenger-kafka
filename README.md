@@ -13,12 +13,10 @@ bundle registration are preserved.
 
 ## Installation
 
-Until a release is published on Packagist, register this repository in your
-application and install the development branch:
+Install the latest stable release from Packagist:
 
 ```console
-composer config repositories.messenger-kafka vcs https://github.com/kovenant/messenger-kafka
-composer require kovenant/messenger-kafka:dev-master
+composer require kovenant/messenger-kafka:^1.0
 ```
 
 ### Bundle registration
