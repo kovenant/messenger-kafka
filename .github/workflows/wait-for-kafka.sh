@@ -2,10 +2,11 @@
 end=$((SECONDS+60))
 
 while [ $SECONDS -lt $end ]; do
-    if echo dump | nc localhost 2181 | grep broker ; then
+    if nc -z -w 1 localhost 9092; then
         exit 0
-    else
-        echo "Kafka didn't start in time"
     fi
     sleep 1
 done
+
+echo "Kafka did not become ready within 60 seconds" >&2
+exit 1
