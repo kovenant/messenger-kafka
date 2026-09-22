@@ -25,7 +25,7 @@ class KafkaReceiver implements ReceiverInterface
         LoggerInterface $logger,
         SerializerInterface $serializer,
         RdKafkaFactory $rdKafkaFactory,
-        KafkaReceiverProperties $properties
+        KafkaReceiverProperties $properties,
     ) {
         $this->logger = $logger;
         $this->serializer = $serializer;
@@ -35,13 +35,14 @@ class KafkaReceiver implements ReceiverInterface
         $this->subscribed = false;
     }
 
-    public function get(): iterable
+    public function get(int $fetchSize = 1): iterable
     {
+        // fetchSize is a best-effort hint; keep processing one message at a time.
         $message = $this->getSubscribedConsumer()->consume($this->properties->getReceiveTimeoutMs());
 
         switch ($message->err) {
             case RD_KAFKA_RESP_ERR_NO_ERROR:
-                $this->logger->info(sprintf(
+                $this->logger->info(\sprintf(
                     'Kafka: Message %s %s %s received ',
                     $message->topic_name,
                     $message->partition,
@@ -84,7 +85,7 @@ class KafkaReceiver implements ReceiverInterface
         if ($this->properties->isCommitAsync()) {
             $consumer->commitAsync($message);
 
-            $this->logger->info(sprintf(
+            $this->logger->info(\sprintf(
                 'Offset topic=%s partition=%s offset=%s to be committed asynchronously.',
                 $message->topic_name,
                 $message->partition,
@@ -93,7 +94,7 @@ class KafkaReceiver implements ReceiverInterface
         } else {
             $consumer->commit($message);
 
-            $this->logger->info(sprintf(
+            $this->logger->info(\sprintf(
                 'Offset topic=%s partition=%s offset=%s successfully committed.',
                 $message->topic_name,
                 $message->partition,

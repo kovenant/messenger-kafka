@@ -1,27 +1,30 @@
 # Symfony Messenger Kafka Transport
 
-[![License](https://img.shields.io/github/license/KonstantinCodes/messenger-kafka.svg)](LICENSE)
-[![Packagist](https://img.shields.io/packagist/dt/koco/messenger-kafka.svg)](https://packagist.org/packages/koco/messenger-kafka)
-[![Maintainability](https://api.codeclimate.com/v1/badges/7fa3d2da6a828a676f35/maintainability)](https://codeclimate.com/github/KonstantinCodes/messenger-kafka/maintainability)
-[![CircleCI](https://circleci.com/gh/KonstantinCodes/messenger-kafka.svg?style=svg)](https://circleci.com/gh/KonstantinCodes/messenger-kafka)
-[![Tests](https://github.com/KonstantinCodes/messenger-kafka/workflows/Tests/badge.svg)](https://github.com/KonstantinCodes/messenger-kafka/actions)
+[![License](https://img.shields.io/github/license/kovenant/messenger-kafka.svg)](LICENSE)
+[![Tests](https://github.com/kovenant/messenger-kafka/actions/workflows/php.yml/badge.svg)](https://github.com/kovenant/messenger-kafka/actions/workflows/php.yml)
 
 This bundle aims to provide a simple Kafka transport for Symfony Messenger. Kafka REST Proxy support coming soon.
 
+This is a fork of [KonstantinCodes/messenger-kafka](https://github.com/KonstantinCodes/messenger-kafka)
+with compatibility updates from [Jobcloud](https://github.com/jobcloud/messenger-kafka).
+It requires PHP 8.1 or newer and supports Symfony 6.4, 7.3+ and 8.x.
+The Composer package is `kovenant/messenger-kafka`; the `Koco\Kafka` namespace and
+bundle registration are preserved.
+
 ## Installation
 
-### Applications that use Symfony Flex
-
-Open a command console, enter your project directory and execute:
+Until a release is published on Packagist, register this repository in your
+application and install the development branch:
 
 ```console
-$ composer require koco/messenger-kafka
+composer config repositories.messenger-kafka vcs https://github.com/kovenant/messenger-kafka
+composer require kovenant/messenger-kafka:dev-master
 ```
 
-### Applications that don't use Symfony Flex
+### Bundle registration
 
-After adding the composer requirement, enable the bundle by adding it to the list of registered bundles
-in the `config/bundles.php` file of your project:
+This fork has no Symfony Flex recipe. Enable the bundle in your project's
+`config/bundles.php`:
 
 ```php
 return [
@@ -29,6 +32,18 @@ return [
     Koco\Kafka\KocoKafkaBundle::class => ['all' => true],
 ];
 ```
+
+## Tests
+
+With PHP and `ext-rdkafka` installed:
+
+```console
+composer install
+vendor/bin/simple-phpunit tests/Unit
+```
+
+The full suite (`vendor/bin/simple-phpunit`) also requires a disposable Kafka
+broker at `127.0.0.1:9092`. Tests fail on Symfony deprecations.
 
 ## Configuration
 

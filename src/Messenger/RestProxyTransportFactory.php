@@ -9,7 +9,6 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Log\LoggerInterface;
-use function strpos;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
@@ -39,7 +38,7 @@ class RestProxyTransportFactory implements TransportFactoryInterface
         ?ClientInterface $client,
         ?RequestFactoryInterface $requestFactory,
         ?UriFactoryInterface $uriFactory,
-        ?StreamFactoryInterface $streamFactory
+        ?StreamFactoryInterface $streamFactory,
     ) {
         $this->logger = $logger;
         $this->client = $client;
@@ -117,9 +116,9 @@ class RestProxyTransportFactory implements TransportFactoryInterface
         }
     }
 
-    private function createMissingServiceException(string $className, string $message = null)
+    private function createMissingServiceException(string $className, ?string $message = null)
     {
-        return new \InvalidArgumentException(sprintf(
+        return new \InvalidArgumentException(\sprintf(
             '%sPlease install a library that provides "%s" and ensure the service is registered.',
             $message ? $message . ' ' : '',
             $className

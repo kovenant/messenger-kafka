@@ -16,7 +16,7 @@ use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
 class KafkaRestProxySenderTest extends TestCase
 {
-    public function testBla()
+    public function testBla(): void
     {
         $client = new DummyClient();
         $serializer = new DummySerializer();
@@ -33,9 +33,9 @@ class KafkaRestProxySenderTest extends TestCase
             $psr17Factory
         );
 
-        //$sender->send()
+        // $sender->send()
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 }
 

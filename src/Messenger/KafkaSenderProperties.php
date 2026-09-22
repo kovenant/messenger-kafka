@@ -24,7 +24,7 @@ final class KafkaSenderProperties
         KafkaConf $kafkaConf,
         string $topicName,
         int $flushTimeoutMs,
-        int $flushRetries
+        int $flushRetries,
     ) {
         $this->kafkaConf = $kafkaConf;
         $this->topicName = $topicName;

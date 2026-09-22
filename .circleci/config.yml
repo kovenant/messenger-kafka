@@ -21,7 +21,7 @@ jobs:
       - checkout
 
       - run: sudo apt update
-      - run: sudo apt install librdkafka1 librdkafka-dev kafkacat netcat
+      - run: sudo apt install librdkafka1 librdkafka-dev kafkacat netcat-openbsd
       - run: sudo pecl install rdkafka xdebug
 
       # Download and cache dependencies
@@ -42,7 +42,7 @@ jobs:
           key: v1-dependencies-latest
           paths:
             - ./vendor
-            - ./vendor/bin/.phpunit/phpunit-8.3-0/vendor
+            - ./vendor/bin/.phpunit/phpunit-9.6-0/vendor
 
       - run:
           name: Setup Code Climate test-reporter
@@ -72,8 +72,8 @@ workflows:
   all-versions:
     jobs:
       - build:
-          name: "php-7.4"
-          php-version: "7.4"
+          name: "php-8.4"
+          php-version: "8.4"
       - build:
           name: "php-8.1"
           php-version: "8.1"

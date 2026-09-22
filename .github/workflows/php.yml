@@ -9,11 +9,26 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
+      fail-fast: false
       matrix:
-        php:
-          - "7.4"
-          - "8.1"
+        include:
+          - php: '8.1'
+            symfony: '6.4.*'
+          - php: '8.3'
+            symfony: '7.4.*'
+          - php: '8.4'
+            symfony: '7.4.*'
+          - php: '8.4'
+            symfony: '8.0.*'
+          - php: '8.4'
+            symfony: '8.1.*'
+          - php: '8.5'
+            symfony: '8.1.*'
+
+    env:
+      SYMFONY_DEPRECATIONS_HELPER: 'max[total]=0'
 
     services:
       kafka:
@@ -31,14 +46,14 @@ jobs:
           - 2181:2181
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Validate composer.json and composer.lock
         run: composer validate
 
       - name: Install rdkafka
         run:
-          sudo add-apt-repository universe && sudo apt update && sudo apt install netcat librdkafka1 librdkafka-dev
+          sudo add-apt-repository universe && sudo apt update && sudo apt install netcat-traditional librdkafka1 librdkafka-dev
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -52,23 +67,17 @@ jobs:
       - name: check if rdkafka is there
         run: php -v && php --ri rdkafka
 
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
-
       - name: Install dependencies
-        if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer update --prefer-dist --no-progress
+        run: |
+          composer global require --no-progress --no-scripts --no-plugins "symfony/flex:^2.4"
+          composer global config --no-plugins allow-plugins.symfony/flex true
+          composer config extra.symfony.require "${{ matrix.symfony }}"
+          composer update --prefer-dist --no-progress
 
       - name: Wait for Kafka
         run: .github/workflows/wait-for-kafka.sh
 
-      - name: Unit Tests
+      - name: Unit and functional tests
         run: ./vendor/bin/simple-phpunit --log-junit results/tests/junit.xml
 
       #- name: try to produce

@@ -24,7 +24,7 @@ final class KafkaReceiverProperties
         KafkaConf $kafkaConf,
         string $topicName,
         int $receiveTimeoutMs,
-        bool $commitAsync
+        bool $commitAsync,
     ) {
         $this->kafkaConf = $kafkaConf;
         $this->topicName = $topicName;

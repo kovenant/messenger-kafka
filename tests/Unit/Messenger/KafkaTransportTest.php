@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Koco\Kafka\Tests\Unit\Messenger;
 
 use Koco\Kafka\Messenger\KafkaMessageStamp;
+use Koco\Kafka\Messenger\KafkaReceiver;
 use Koco\Kafka\Messenger\KafkaReceiverProperties;
 use Koco\Kafka\Messenger\KafkaSenderProperties;
 use Koco\Kafka\Messenger\KafkaTransport;
@@ -57,7 +58,7 @@ class KafkaTransportTest extends TestCase
             ->willReturn($this->mockRdKafkaProducer);
     }
 
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $transport = new KafkaTransport(
             $this->mockLogger,
@@ -77,10 +78,13 @@ class KafkaTransportTest extends TestCase
             )
         );
 
-        static::assertInstanceOf(TransportInterface::class, $transport);
+        self::assertInstanceOf(TransportInterface::class, $transport);
     }
 
-    public function testGet()
+    /**
+     * @dataProvider provideGetCases
+     */
+    public function testGet(?int $fetchSize): void
     {
         $this->mockRdKafkaConsumer->method('subscribe');
 
@@ -97,10 +101,12 @@ class KafkaTransportTest extends TestCase
         $testMessage->timestamp = 1586861356;
 
         $this->mockRdKafkaConsumer
+            ->expects(self::once())
             ->method('consume')
+            ->with(10000)
             ->willReturn($testMessage);
 
-        $this->mockSerializer->expects(static::once())
+        $this->mockSerializer->expects(self::once())
             ->method('decode')
             ->with([
                 'body' => '{"data":null}',
@@ -132,23 +138,52 @@ class KafkaTransportTest extends TestCase
             )
         );
 
-        $receivedMessages = $transport->get();
-        static::assertArrayHasKey(0, $receivedMessages);
+        $receivedMessages = null === $fetchSize ? $transport->get() : $transport->get($fetchSize);
+        self::assertCount(1, $receivedMessages);
+        self::assertArrayHasKey(0, $receivedMessages);
 
         /** @var Envelope $receivedMessage */
         $receivedMessage = $receivedMessages[0];
-        static::assertInstanceOf(Envelope::class, $receivedMessage);
-        static::assertInstanceOf(TestMessage::class, $receivedMessage->getMessage());
+        self::assertInstanceOf(Envelope::class, $receivedMessage);
+        self::assertInstanceOf(TestMessage::class, $receivedMessage->getMessage());
 
         $stamps = $receivedMessage->all();
-        static::assertCount(1, $stamps);
-        static::assertArrayHasKey(KafkaMessageStamp::class, $stamps);
+        self::assertCount(1, $stamps);
+        self::assertArrayHasKey(KafkaMessageStamp::class, $stamps);
 
         $kafkaMessageStamps = $stamps[KafkaMessageStamp::class];
-        static::assertCount(1, $kafkaMessageStamps);
+        self::assertCount(1, $kafkaMessageStamps);
 
         /** @var KafkaMessageStamp $kafkaMessageStamp */
         $kafkaMessageStamp = $kafkaMessageStamps[0];
-        static::assertSame($testMessage, $kafkaMessageStamp->getMessage());
+        self::assertSame($testMessage, $kafkaMessageStamp->getMessage());
+    }
+
+    public static function provideGetCases(): iterable
+    {
+        yield 'default remains one message' => [null];
+        yield 'larger fetch size still polls one message' => [10];
+    }
+
+    public function testGetForwardsFetchSizeToReceiver(): void
+    {
+        $transport = new KafkaTransport(
+            $this->mockLogger,
+            $this->mockSerializer,
+            $this->mockRdKafkaFactory,
+            new KafkaSenderProperties(new KafkaConf(), 'test', 10000, 10000),
+            new KafkaReceiverProperties(new KafkaConf(), 'test', 10000, false)
+        );
+        $envelopes = [new Envelope(new TestMessage())];
+        $receiver = $this->createMock(KafkaReceiver::class);
+        $receiver->expects(self::once())
+            ->method('get')
+            ->with(10)
+            ->willReturn($envelopes);
+
+        $receiverProperty = new \ReflectionProperty(KafkaTransport::class, 'receiver');
+        $receiverProperty->setValue($transport, $receiver);
+
+        self::assertSame($envelopes, $transport->get(10));
     }
 }

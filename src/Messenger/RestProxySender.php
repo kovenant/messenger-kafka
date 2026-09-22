@@ -43,7 +43,7 @@ class RestProxySender implements SenderInterface
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
         UriFactoryInterface $uriFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
     ) {
         $this->baseUri = $baseUri;
         $this->topicName = $topicName;
@@ -54,9 +54,6 @@ class RestProxySender implements SenderInterface
         $this->streamFactory = $streamFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function send(Envelope $envelope): Envelope
     {
         $encoded = $this->serializer->encode($envelope);
