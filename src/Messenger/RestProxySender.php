@@ -43,7 +43,7 @@ class RestProxySender implements SenderInterface
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
         UriFactoryInterface $uriFactory,
-        StreamFactoryInterface $streamFactory,
+        StreamFactoryInterface $streamFactory
     ) {
         $this->baseUri = $baseUri;
         $this->topicName = $topicName;

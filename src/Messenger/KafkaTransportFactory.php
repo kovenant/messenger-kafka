@@ -31,7 +31,7 @@ class KafkaTransportFactory implements TransportFactoryInterface
 
     public function __construct(
         RdKafkaFactory $kafkaFactory,
-        ?LoggerInterface $logger,
+        ?LoggerInterface $logger
     ) {
         $this->logger = $logger ?? new NullLogger();
         $this->kafkaFactory = $kafkaFactory;

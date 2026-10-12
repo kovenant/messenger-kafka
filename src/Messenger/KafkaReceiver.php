@@ -25,7 +25,7 @@ class KafkaReceiver implements ReceiverInterface
         LoggerInterface $logger,
         SerializerInterface $serializer,
         RdKafkaFactory $rdKafkaFactory,
-        KafkaReceiverProperties $properties,
+        KafkaReceiverProperties $properties
     ) {
         $this->logger = $logger;
         $this->serializer = $serializer;

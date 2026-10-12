@@ -54,7 +54,7 @@ class RestProxyTransport implements TransportInterface, MessageCountAwareInterfa
         RequestFactoryInterface $requestFactory,
         UriFactoryInterface $uriFactory,
         StreamFactoryInterface $streamFactory,
-        ?LoggerInterface $logger = null,
+        ?LoggerInterface $logger = null
     ) {
         $this->baseUri = $baseUri;
         $this->topicName = $topicName;

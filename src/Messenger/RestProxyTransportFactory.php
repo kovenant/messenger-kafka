@@ -38,7 +38,7 @@ class RestProxyTransportFactory implements TransportFactoryInterface
         ?ClientInterface $client,
         ?RequestFactoryInterface $requestFactory,
         ?UriFactoryInterface $uriFactory,
-        ?StreamFactoryInterface $streamFactory,
+        ?StreamFactoryInterface $streamFactory
     ) {
         $this->logger = $logger;
         $this->client = $client;

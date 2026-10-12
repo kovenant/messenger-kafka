@@ -24,7 +24,7 @@ class KafkaSender implements SenderInterface
         LoggerInterface $logger,
         SerializerInterface $serializer,
         RdKafkaFactory $rdKafkaFactory,
-        KafkaSenderProperties $properties,
+        KafkaSenderProperties $properties
     ) {
         $this->logger = $logger;
         $this->serializer = $serializer;

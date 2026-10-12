@@ -8,7 +8,10 @@ This bundle aims to provide a simple Kafka transport for Symfony Messenger. Kafk
 This is a fork of [KonstantinCodes/messenger-kafka](https://github.com/KonstantinCodes/messenger-kafka)
 with compatibility updates from [Jobcloud](https://github.com/jobcloud/messenger-kafka)
 and changes from upstream `v0.19`.
-It requires PHP 8.1 or newer and supports Symfony 6.4, 7.3+ and 8.x.
+Its supported versions match upstream: PHP `^7.4|8.*` and Symfony
+`^5.4 || ^6.4 || ^7.4 || ^8.1`.
+PHP requirements are 7.4+ for Symfony 5.4, 8.1+ for Symfony 6.4,
+8.2+ for Symfony 7.4, and 8.4+ for Symfony 8.1.
 The Composer package is `kovenant/messenger-kafka`; the `Koco\Kafka` namespace and
 bundle registration are preserved.
 
@@ -48,8 +51,8 @@ The full suite (`vendor/bin/simple-phpunit`) also requires a disposable Kafka
 broker at `127.0.0.1:9092`. Tests enable Symfony's debug class loader and fail on
 deprecations. Run `composer test` to check coding style and unit tests together.
 
-GitHub Actions runs unit and Kafka integration tests for Symfony 6.4, 7.4, 8.0
-and 8.1 across PHP 8.1–8.5, plus a separate coding-style check. Each test job
+GitHub Actions runs unit and Kafka integration tests for Symfony 5.4, 6.4, 7.4
+and 8.1 on PHP 7.4 and 8.1–8.5, plus a separate coding-style check. Each test job
 uploads JUnit results and Clover coverage reports, including when tests fail.
 The badge above reports the combined result. CI runs on pushes and pull requests
 to `master`.

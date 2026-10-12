@@ -38,7 +38,7 @@ class KafkaTransport implements TransportInterface
         SerializerInterface $serializer,
         RdKafkaFactory $rdKafkaFactory,
         KafkaSenderProperties $kafkaSenderProperties,
-        KafkaReceiverProperties $kafkaReceiverProperties,
+        KafkaReceiverProperties $kafkaReceiverProperties
     ) {
         $this->logger = $logger;
         $this->serializer = $serializer;

@@ -182,6 +182,9 @@ class KafkaTransportTest extends TestCase
             ->willReturn($envelopes);
 
         $receiverProperty = new \ReflectionProperty(KafkaTransport::class, 'receiver');
+        if (\PHP_VERSION_ID < 80100) {
+            $receiverProperty->setAccessible(true);
+        }
         $receiverProperty->setValue($transport, $receiver);
 
         self::assertSame($envelopes, $transport->get(10));
