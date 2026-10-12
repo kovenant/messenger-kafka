@@ -49,8 +49,16 @@ class KafkaTransportTest extends TestCase
         $serializer = new Serializer();
         $phpSerializer = new PhpSerializer();
 
-        yield [$serializer, self::createSerializerDecodeClosure($serializer)];
-        yield [$phpSerializer, self::createPHPSerializerDecodeClosure($phpSerializer)];
+        return [
+            [
+                $serializer,
+                self::createSerializerDecodeClosure($serializer),
+            ],
+            [
+                $phpSerializer,
+                self::createPHPSerializerDecodeClosure($phpSerializer),
+            ],
+        ];
     }
 
     /**
@@ -68,7 +76,7 @@ class KafkaTransportTest extends TestCase
                 ],
                 'kafka_conf' => [],
             ],
-            $serializer
+            $serializer,
         );
 
         $envelope = Envelope::wrap(new TestMessage('my_test_data'), []);
@@ -92,7 +100,7 @@ class KafkaTransportTest extends TestCase
                     'auto.offset.reset' => 'earliest',
                 ],
             ],
-            $this->serializerMock
+            $this->serializerMock,
         );
 
         $this->serializerMock->expects(self::once())
@@ -112,15 +120,15 @@ class KafkaTransportTest extends TestCase
     public static function createSerializerDecodeClosure(SerializerInterface $serializer): \Closure
     {
         return static function (array $encodedEnvelope) use ($serializer) {
-            self::assertIsArray($encodedEnvelope);
+            static::assertIsArray($encodedEnvelope);
 
-            self::assertSame('{"data":"my_test_data"}', $encodedEnvelope['body']);
+            static::assertSame('{"data":"my_test_data"}', $encodedEnvelope['body']);
 
-            self::assertArrayHasKey('headers', $encodedEnvelope);
+            static::assertArrayHasKey('headers', $encodedEnvelope);
             $headers = $encodedEnvelope['headers'];
 
-            self::assertSame(TestMessage::class, $headers['type']);
-            self::assertSame('application/json', $headers['Content-Type']);
+            static::assertSame(TestMessage::class, $headers['type']);
+            static::assertSame('application/json', $headers['Content-Type']);
 
             return $serializer->decode($encodedEnvelope);
         };
@@ -129,14 +137,13 @@ class KafkaTransportTest extends TestCase
     public static function createPHPSerializerDecodeClosure(SerializerInterface $serializer): \Closure
     {
         return static function (array $encodedEnvelope) use ($serializer) {
-            self::assertIsArray($encodedEnvelope);
+            static::assertIsArray($encodedEnvelope);
 
-            self::assertSame(
-                'O:36:\"Symfony\\\\Component\\\\Messenger\\\\Envelope\":2:{s:44:\"\0Symfony\\\\Component\\\\Messenger\\\\Envelope\0stamps\";a:0:{}s:45:\"\0Symfony\\\\Component\\\\Messenger\\\\Envelope\0message\";O:39:\"Koco\\\\Kafka\\\\Tests\\\\Functional\\\\TestMessage\":1:{s:4:\"data\";s:12:\"my_test_data\";}}',
-                $encodedEnvelope['body']
-            );
+            $decoded = $serializer->decode($encodedEnvelope);
+            static::assertInstanceOf(TestMessage::class, $decoded->getMessage());
+            static::assertSame('my_test_data', $decoded->getMessage()->data);
 
-            self::assertArrayHasKey('headers', $encodedEnvelope);
+            static::assertArrayHasKey('headers', $encodedEnvelope);
 
             return $serializer->decode($encodedEnvelope);
         };
@@ -144,6 +151,6 @@ class KafkaTransportTest extends TestCase
 
     private function getTopicName()
     {
-        return self::TOPIC_NAME . '_' . $this->testStartTime->getTimestamp() . '_' . $this->testIteration;
+        return self::TOPIC_NAME . '_' . $this->testStartTime->format('U_u') . '_' . $this->testIteration;
     }
 }

@@ -45,7 +45,7 @@ class KafkaSender implements SenderInterface
                 trigger_error(
                     'ext-rdkafka < 4.0.0 is incompatible with lib-rdkafka 1.0.0 when calling `producev`. ' .
                     'Falling back to `produce` (without message headers) instead.',
-                    E_USER_WARNING
+                    E_USER_WARNING,
                 );
             } else {
                 $topic->producev(
@@ -54,7 +54,7 @@ class KafkaSender implements SenderInterface
                     $payload['body'],
                     $payload['key'] ?? null,
                     $payload['headers'] ?? null,
-                    $payload['timestamp_ms'] ?? null
+                    $payload['timestamp_ms'] ?? null,
                 );
 
                 $this->producer->poll(0);
@@ -64,7 +64,7 @@ class KafkaSender implements SenderInterface
                 RD_KAFKA_PARTITION_UA,
                 0,
                 $payload['body'],
-                $payload['key'] ?? null
+                $payload['key'] ?? null,
             );
 
             $this->producer->poll(0);

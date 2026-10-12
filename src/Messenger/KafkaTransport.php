@@ -73,7 +73,7 @@ class KafkaTransport implements TransportInterface
             $this->logger,
             $this->serializer,
             $this->rdKafkaFactory,
-            $this->kafkaSenderProperties
+            $this->kafkaSenderProperties,
         );
     }
 
@@ -83,7 +83,7 @@ class KafkaTransport implements TransportInterface
             $this->logger,
             $this->serializer,
             $this->rdKafkaFactory,
-            $this->kafkaReceiverProperties
+            $this->kafkaReceiverProperties,
         );
     }
 }

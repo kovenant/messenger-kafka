@@ -23,7 +23,7 @@ class RestProxyTransportTest extends TestCase
             $this->createMock(ClientInterface::class),
             $psr17Factory,
             $psr17Factory,
-            $psr17Factory
+            $psr17Factory,
         );
 
         $this->expectException(\Exception::class);

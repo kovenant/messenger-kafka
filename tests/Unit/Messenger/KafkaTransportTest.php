@@ -68,14 +68,14 @@ class KafkaTransportTest extends TestCase
                 new KafkaConf(),
                 'test',
                 10000,
-                10000
+                10000,
             ),
             new KafkaReceiverProperties(
                 new KafkaConf(),
                 'test',
                 10000,
-                false
-            )
+                false,
+            ),
         );
 
         self::assertInstanceOf(TransportInterface::class, $transport);
@@ -128,14 +128,14 @@ class KafkaTransportTest extends TestCase
                 new KafkaConf(),
                 'test',
                 10000,
-                10000
+                10000,
             ),
             new KafkaReceiverProperties(
                 new KafkaConf(),
                 'test',
                 10000,
-                false
-            )
+                false,
+            ),
         );
 
         $receivedMessages = null === $fetchSize ? $transport->get() : $transport->get($fetchSize);
@@ -172,7 +172,7 @@ class KafkaTransportTest extends TestCase
             $this->mockSerializer,
             $this->mockRdKafkaFactory,
             new KafkaSenderProperties(new KafkaConf(), 'test', 10000, 10000),
-            new KafkaReceiverProperties(new KafkaConf(), 'test', 10000, false)
+            new KafkaReceiverProperties(new KafkaConf(), 'test', 10000, false),
         );
         $envelopes = [new Envelope(new TestMessage())];
         $receiver = $this->createMock(KafkaReceiver::class);

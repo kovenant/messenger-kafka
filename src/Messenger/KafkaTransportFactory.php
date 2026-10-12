@@ -70,14 +70,14 @@ class KafkaTransportFactory implements TransportFactoryInterface
                 $conf,
                 $options['topic']['name'],
                 $options['flushTimeout'] ?? 10000,
-                $options['flushRetries'] ?? 0
+                $options['flushRetries'] ?? 0,
             ),
             new KafkaReceiverProperties(
                 $conf,
                 $options['topic']['name'],
                 $options['receiveTimeout'] ?? 10000,
-                $options['commitAsync'] ?? false
-            )
+                $options['commitAsync'] ?? false,
+            ),
         );
     }
 

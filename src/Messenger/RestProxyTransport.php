@@ -100,7 +100,7 @@ class RestProxyTransport implements TransportInterface, MessageCountAwareInterfa
             $this->client,
             $this->requestFactory,
             $this->uriFactory,
-            $this->streamFactory
+            $this->streamFactory,
         );
     }
 }

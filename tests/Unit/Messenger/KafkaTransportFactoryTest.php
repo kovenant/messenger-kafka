@@ -48,7 +48,7 @@ class KafkaTransportFactoryTest extends TestCase
                 'kafka_conf' => [
                 ],
             ],
-            $this->serializerMock
+            $this->serializerMock,
         );
 
         self::assertInstanceOf(TransportInterface::class, $transport);

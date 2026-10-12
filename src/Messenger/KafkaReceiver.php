@@ -46,7 +46,7 @@ class KafkaReceiver implements ReceiverInterface
                     'Kafka: Message %s %s %s received ',
                     $message->topic_name,
                     $message->partition,
-                    $message->offset
+                    $message->offset,
                 ));
 
                 $envelope = $this->serializer->decode([
@@ -89,7 +89,7 @@ class KafkaReceiver implements ReceiverInterface
                 'Offset topic=%s partition=%s offset=%s to be committed asynchronously.',
                 $message->topic_name,
                 $message->partition,
-                $message->offset
+                $message->offset,
             ));
         } else {
             $consumer->commit($message);
@@ -98,7 +98,7 @@ class KafkaReceiver implements ReceiverInterface
                 'Offset topic=%s partition=%s offset=%s successfully committed.',
                 $message->topic_name,
                 $message->partition,
-                $message->offset
+                $message->offset,
             ));
         }
     }

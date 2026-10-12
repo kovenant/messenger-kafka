@@ -1,15 +1,19 @@
 # Symfony Messenger Kafka Transport
 
 [![License](https://img.shields.io/github/license/kovenant/messenger-kafka.svg)](LICENSE)
-[![Tests](https://github.com/kovenant/messenger-kafka/actions/workflows/php.yml/badge.svg)](https://github.com/kovenant/messenger-kafka/actions/workflows/php.yml)
+[![Tests and coding style](https://github.com/kovenant/messenger-kafka/actions/workflows/php.yml/badge.svg?branch=master)](https://github.com/kovenant/messenger-kafka/actions/workflows/php.yml?query=branch%3Amaster)
 
 This bundle aims to provide a simple Kafka transport for Symfony Messenger. Kafka REST Proxy support coming soon.
 
 This is a fork of [KonstantinCodes/messenger-kafka](https://github.com/KonstantinCodes/messenger-kafka)
-with compatibility updates from [Jobcloud](https://github.com/jobcloud/messenger-kafka).
+with compatibility updates from [Jobcloud](https://github.com/jobcloud/messenger-kafka)
+and changes from upstream `v0.19`.
 It requires PHP 8.1 or newer and supports Symfony 6.4, 7.3+ and 8.x.
 The Composer package is `kovenant/messenger-kafka`; the `Koco\Kafka` namespace and
 bundle registration are preserved.
+
+The native Kafka transport requires the `rdkafka` PHP extension. REST Proxy
+sending uses a PSR-18 HTTP client and PSR-17 factories and supports PSR-7 1.x and 2.x.
 
 ## Installation
 
@@ -41,7 +45,14 @@ vendor/bin/simple-phpunit tests/Unit
 ```
 
 The full suite (`vendor/bin/simple-phpunit`) also requires a disposable Kafka
-broker at `127.0.0.1:9092`. Tests fail on Symfony deprecations.
+broker at `127.0.0.1:9092`. Tests enable Symfony's debug class loader and fail on
+deprecations. Run `composer test` to check coding style and unit tests together.
+
+GitHub Actions runs unit and Kafka integration tests for Symfony 6.4, 7.4, 8.0
+and 8.1 across PHP 8.1–8.5, plus a separate coding-style check. Each test job
+uploads JUnit results and Clover coverage reports, including when tests fail.
+The badge above reports the combined result. CI runs on pushes and pull requests
+to `master`.
 
 ## Configuration
 

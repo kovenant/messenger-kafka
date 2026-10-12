@@ -80,7 +80,7 @@ class RestProxyTransportFactory implements TransportFactoryInterface
             $this->requestFactory,
             $this->uriFactory,
             $this->streamFactory,
-            $this->logger
+            $this->logger,
         );
     }
 
@@ -121,7 +121,7 @@ class RestProxyTransportFactory implements TransportFactoryInterface
         return new \InvalidArgumentException(\sprintf(
             '%sPlease install a library that provides "%s" and ensure the service is registered.',
             $message ? $message . ' ' : '',
-            $className
+            $className,
         ));
     }
 }
